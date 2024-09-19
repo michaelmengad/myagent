@@ -1,27 +1,11 @@
 <script type="module">
-  import {
-    GofileUploadExtension,
-    TwoPartFormExtension,
-    NoNameFormExtension,
-    PersonalInfoFormExtension,
-  } from 'https://cdn.jsdelivr.net/gh/Convizr/EcomAgent/KungFunghiExtensionV2.1.js';
-
   (function(d, t) {
       var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
       v.onload = function() {
         window.voiceflow.chat.load({
-          verify: { projectID: '66daf8978fbc704f25cd02db' },
+          verify: { projectID: '66daf8978fbc704f25cd02da' },
           url: 'https://general-runtime.voiceflow.com',
-          versionID: 'production',
-          allowDangerousHTML: true,
-          assistant: {
-            extensions: [
-                    GofileUploadExtension,
-                    TwoPartFormExtension,
-                    NoNameFormExtension,
-                    PersonalInfoFormExtension,
-            ],
-          }
+          versionID: 'production'
         });
       }
       v.src = "https://cdn.voiceflow.com/widget/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
