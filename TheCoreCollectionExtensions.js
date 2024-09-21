@@ -14,11 +14,9 @@ export const TwoPartFormExtension = {
     }
 
     console.log('Payload:', payloadObj);
-
-    /*const {
-      bt_submit, lb_quantity, lb_fullName, lb_email, lb_address, lb_appartmentNumber, lb_postalCode, lb_city, lb_country, lb_orderDetails, lb_personalInformation,
-    } = payloadObj;*/
-
+    
+    const { orderAvailableSizes, orderProductSize } = payloadObj;
+    
     const formContainer = document.createElement('form');
 
     formContainer.innerHTML = `
@@ -60,6 +58,13 @@ export const TwoPartFormExtension = {
         <label for="quantity">Quantity</label>
         <input type="number" id="quantity" name="quantity" min="1" required>
       </fieldset>
+
+              <label for="size">Size:</label>
+              <select id="size" name="size" required>
+                  <option value="">Select a size</option>
+                  ${orderAvailableSizes.split(',').map(size => 
+                      `<option value="${size}" ${size.trim() === orderProductSize.trim() ? 'selected' : ''}>${size}</option>`).join('')}
+              </select>
 
       <fieldset id="customerInfo" class="hidden">
         <legend>Personal Information</legend>
@@ -116,6 +121,7 @@ export const TwoPartFormExtension = {
         type: 'complete',
         payload: {
           orderQuantity: formContainer.querySelector('#quantity').value,
+          orderSize: formContainer.querySelector('#size').value,
           customerFullName: fullName,
           customerEmail: email,
           customerAddress: address,
@@ -146,7 +152,7 @@ export const NoNameFormExtension = {
           payloadObj = trace.payload;
       }
 
-      //const { orderAvailableSizes, orderProductSize, orderProductColor } = payloadObj;
+      const { orderAvailableSizes, orderProductSize } = payloadObj;
       console.log('Payload:', payloadObj);
 
       const formContainer = document.createElement('form');
