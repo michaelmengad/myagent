@@ -235,72 +235,91 @@ export const NoNameFormExtension = {
   name: 'NoNameForm',
   type: 'response',
   match: ({ trace }) =>
-    trace.type === 'no_name_form' || trace.payload.name === 'no_name_form',
+      trace.type === 'no_name_form' || trace.payload.name === 'no_name_form',
   render: ({ trace, element }) => {
-    console.log('Rendering NoNameFormExtension');
+      console.log('Rendering NoNameFormExtension');
+      
+      let payloadObj;
+      if (typeof trace.payload === 'string') {
+          payloadObj = JSON.parse(trace.payload);
+      } else {
+          payloadObj = trace.payload;
+      }
 
-    let payloadObj;
-    if (typeof trace.payload === 'string') {
-      payloadObj = JSON.parse(trace.payload);
-    } else {
-      payloadObj = trace.payload;
-    }
+      const { orderAvailableSizes, orderProductSize, orderProductColor } = payloadObj;
+      console.log('Payload:', payloadObj);
 
-    console.log('Payload:', payloadObj);
+      const formContainer = document.createElement('form');
+      const today = new Date().toISOString().split('T')[0];
 
-    const { bt_submit, lb_quantity, lb_orderDetails } = payloadObj;
+      formContainer.innerHTML = `
+          <style>
+              label {
+                  display: block;
+                  margin: 10px 0 5px;
+              }
+              input, select {
+                  width: 100%;
+                  padding: 8px;
+                  margin: 5px 0 20px 0;
+                  display: inline-block;
+                  border: 1px solid #ccc;
+                  border-radius: 4px;
+                  box-sizing: border-box;
+              }
+              .hidden {
+                  display: none;
+              }
+              .visible {
+                  display: block;
+              }
+              input[type="submit"] {
+                  background-color: rgb(150, 182, 212);
+                  color: white;
+                  border: none;
+                  padding: 10px;
+                  border-radius: 4px;
+                  cursor: pointer;
+              }
+              input[type="submit"]:hover {
+                  background-color: rgb(130, 162, 192);
+              }
+          </style>
 
-    const formContainer = document.createElement('form');
+          <fieldset id="orderDetails">
+              <legend>Order Details:</legend>
+              <label for="quantity">Quantity:</label>
+              <input type="number" id="quantity" name="quantity" min="1" required>
 
-    formContainer.innerHTML = `
-      <style>
-        label {
-          display: block;
-          margin: 10px 0 5px;
-        }
-        input {
-          width: 100%;
-          padding: 8px;
-          margin: 5px 0 20px 0;
-          display: inline-block;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-          box-sizing: border-box;
-        }
-        input[type="submit"] {
-          background-color: #291F51;
-          color: white;
-          border: none;
-          padding: 10px;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-        input[type="submit"]:hover {
-          background-color: #3a2a73;
-        }
-      </style>
+              <label for="size">Size:</label>
+              <select id="size" name="size" required>
+                  <option value="">Select a size</option>
+                  ${orderAvailableSizes.split(',').map(size => 
+                      `<option value="${size}" ${size.trim() === orderProductSize.trim() ? 'selected' : ''}>${size}</option>`).join('')}
+              </select>
 
-      <fieldset id="orderDetails">
-        <legend>Order Details</legend>
-        <label for="quantity">Quantity</label>
-        <input type="number" id="quantity" name="quantity" min="1" required>
-      </fieldset>
+              <label for="color">Color:</label>
+              <input type="text" id="color" name="color" value="${orderProductColor}" readonly>
+          </fieldset>
 
-      <input type="submit" value="Submit">
-    `;
+          <input type="submit" value="Submit">
+      `;
 
-    formContainer.addEventListener('submit', function (event) {
-      event.preventDefault();
+      formContainer.addEventListener('submit', function (event) {
+          event.preventDefault();
 
-      window.voiceflow.chat.interact({
-        type: 'complete',
-        payload: {
-          orderQuantity: formContainer.querySelector('#quantity').value,
-        },
+          // Sending each form field as a separate key-value pair in the payload
+          window.voiceflow.chat.interact({
+              type: 'complete',
+              payload: {
+                  orderQuantity: formContainer.querySelector('#quantity').value,
+                  orderSize: formContainer.querySelector('#size').value,
+                  orderColor: formContainer.querySelector('#color').value
+              },
+          });
       });
-    });
 
-    element.appendChild(formContainer);
+      element.appendChild(formContainer);
   },
 };
 
