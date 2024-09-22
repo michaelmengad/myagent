@@ -5,19 +5,23 @@
     PersonalInfoFormExtension
   } from 'https://cdn.jsdelivr.net/gh/michaelmengad/myagent@main/extensions.js';
 
-  import voiceflowChat from 'https://cdn.voiceflow.com/widget/bundle.mjs';
-
-  voiceflowChat.load({
-    verify: { projectID: '66ec9b91e1825ac251292deb' },
-    url: 'https://general-runtime.voiceflow.com',
-    versionID: 'production',
-    allowDangerousHTML: true,
-    assistant: {
-      extensions: [
-        TwoPartFormExtension,
-        NoNameFormExtension,
-        PersonalInfoFormExtension
-      ],
-    },
-  });
+  (function(d, t) {
+      var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+      v.onload = function() {
+        window.voiceflow.chat.load({
+          verify: { projectID: '66ec9b91e1825ac251292deb' },
+          url: 'https://general-runtime.voiceflow.com',
+          versionID: 'production',
+          allowDangerousHTML: true,
+          assistant: {
+            extensions: [
+                    TwoPartFormExtension,
+                    NoNameFormExtension,
+                    PersonalInfoFormExtension
+            ],
+          }
+        });
+      }
+      v.src = "https://cdn.voiceflow.com/widget/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+  })(document, 'script');
 </script>
