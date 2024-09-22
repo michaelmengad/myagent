@@ -136,6 +136,7 @@ export const TwoPartFormExtension = {
     element.appendChild(formContainer);
   },
 };
+
 export const NoNameFormExtension = {
   name: 'NoNameForm',
   type: 'response',
@@ -222,6 +223,7 @@ export const NoNameFormExtension = {
     element.appendChild(formContainer);
   },
 };
+
 export const PersonalInfoFormExtension = {
   name: 'PersonalInfoForm',
   type: 'response',
